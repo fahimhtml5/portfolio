@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  /* Light Theme Colors */
+  --color-page-bg: #E9E9E9;
+  --color-text-main: #1B1C1C;
+  --color-brand: #A2D800;
+  --color-menu: #4C6700;
+  --color-border-main: #c4c7c7;
+  --color-grey-light: #E5E2E1;
+
+  /* Dark Theme / Dark Element Colors */
+  --color-dark-bg: #111111;
+  --color-dark-text: #777777;
+  --color-dark-border: #333333;
+}
+
+/* Responsive */
+@theme {
+  --breakpoint-xl: 1199.98px;
+  --breakpoint-sm: 575.98px;
+}
