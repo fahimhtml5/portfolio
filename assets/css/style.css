@@ -190,14 +190,12 @@ nav {
   font-weight: 900;
   font-family: "Bebas Neue";
 }
-
 #close-menu {
   position: absolute;
   top: 5%;
   right: 0;
   padding: 0 2vw;
 }
-
 .nav-inner {
   position: absolute;
   inset: 0;
@@ -247,6 +245,18 @@ nav {
   text-decoration: none;
   color: var(--ink);
 }
+#menu-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--menu-color); /* tomar brand-er dark color */
+  z-index: 9998;
+  transform: translateY(100%); /* shuru te niche lukano */
+  pointer-events: none;
+}
+
 .hero-text h1 {
   font-size: 8vw;
   font-weight: 900;
@@ -255,7 +265,6 @@ nav {
   font-family: "Boldonse", system-ui;
   user-select: none;
 }
-
 #hero-title .ch {
   display: inline-block;
   will-change: transform;

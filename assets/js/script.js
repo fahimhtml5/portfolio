@@ -319,40 +319,82 @@ function menuAnimation() {
   const openBtn = document.getElementById("open-menu");
   const closeBtn = document.getElementById("close-menu");
   const nav = document.querySelector("nav");
+  const menuLinks = document.querySelectorAll(".nav-link"); // .nav-link class use korlam, tomar HTML onujayi
 
-  // Custom easing curve — menu er slide animation e use hobe
   CustomEase.create("tilt", "M0,0 C0.55,0 0.45,1 1,1");
 
-  // Reusable function — hero section ke left e slide + rotate koray
   const gsapMenu = (xPercent, rotation) => {
     gsap.to("#hero-area", {
       xPercent,
       rotation,
       duration: 0.77,
       ease: "tilt",
-      overwrite: true, // age chola kono animation thakle overwrite hobe, conflict hobe na
+      overwrite: true,
     });
   };
 
-  // ---- Menu OPEN ----
   openBtn.addEventListener("click", () => {
-    gsapMenu(-50, 12); // hero section ke left e slide + tilt
-
-    if (window.lenis) {
-      lenis.stop();
-    }
+    gsapMenu(-50, 12);
+    if (window.lenis) lenis.stop();
   });
 
-  // ---- Menu CLOSE ----
   closeBtn.addEventListener("click", () => {
-    gsapMenu(0, 0); // hero section ke original position e ferot ana
-
-    if (window.lenis) {
-      lenis.start();
-    }
+    gsapMenu(0, 0);
+    if (window.lenis) lenis.start();
   });
 
-  // ---- Text roll-up hover animation (nav links er jonno) ----
+  // ---- Menu link click — smooth scroll + menu close ----
+  menuLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const href = link.getAttribute("href");
+
+      if (!href || href === "#") {
+        e.preventDefault();
+        gsapMenu(0, 0);
+        if (window.lenis) lenis.start();
+        return;
+      }
+
+      e.preventDefault();
+      const targetElement = document.querySelector(href);
+      if (!targetElement) return;
+
+      const overlay = document.getElementById("menu-transition-overlay");
+
+      // ---- Step 1: Overlay niche theke uthe pura screen cover kore ----
+      gsap.to(overlay, {
+        y: "0%",
+        duration: 0.6,
+        ease: "power3.inOut",
+        onComplete: () => {
+          // ---- Step 2: Screen cover thaka obosthay e, menu close + instant scroll ----
+          gsapMenu(0, 0);
+
+          if (window.lenis) {
+            lenis.start();
+            lenis.scrollTo(targetElement, {
+              immediate: true, // overlay-r niche instant jump, user dekhbe na
+            });
+          } else {
+            targetElement.scrollIntoView({ behavior: "instant" });
+          }
+
+          // ---- Step 3: Ektu wait kore, overlay upore uthe abar hide hoye jabe ----
+          gsap.to(overlay, {
+            y: "-100%",
+            duration: 0.6,
+            delay: 0.15,
+            ease: "power3.inOut",
+            onComplete: () => {
+              gsap.set(overlay, { y: "100%" }); // reset, porerbar abar niche theke ashbe
+            },
+          });
+        },
+      });
+    });
+  });
+
+  // ---- Roll-up hover animation — age-er code same thakbe ----
   document.querySelectorAll(".roll-up").forEach((el) => {
     const label = el.textContent.trim();
 
@@ -530,7 +572,7 @@ function processAnimation() {
 
           const activeIndex = Math.min(
             stepCount - 1,
-            Math.floor(self.progress * stepCount)
+            Math.floor(self.progress * stepCount),
           );
 
           steps.forEach((step, i) => {
@@ -541,7 +583,9 @@ function processAnimation() {
     });
 
     steps.forEach((step, i) => {
-      const content = step.querySelectorAll(".step-content h3, .step-content p");
+      const content = step.querySelectorAll(
+        ".step-content h3, .step-content p",
+      );
       tl.to(
         content,
         {
@@ -551,7 +595,7 @@ function processAnimation() {
           stagger: 0.08,
           ease: "power2.out",
         },
-        i
+        i,
       );
     });
 
@@ -565,7 +609,9 @@ function processAnimation() {
   // ===== MOBILE (768px ebong tar niche) — simple stacked reveal, pin nai =====
   mm.add("(max-width: 768px)", () => {
     steps.forEach((step) => {
-      const content = step.querySelectorAll(".step-content h3, .step-content p");
+      const content = step.querySelectorAll(
+        ".step-content h3, .step-content p",
+      );
 
       gsap.to(content, {
         y: 0,
@@ -858,7 +904,10 @@ function footerAnimation() {
     },
   });
 
-  const goodbyeSplit = SplitText.create(".footer-goodbye", { type: "chars", mask: "chars" });
+  const goodbyeSplit = SplitText.create(".footer-goodbye", {
+    type: "chars",
+    mask: "chars",
+  });
   gsap.from(goodbyeSplit.chars, {
     y: 60,
     opacity: 0,
@@ -872,7 +921,6 @@ function footerAnimation() {
   });
 }
 
-
 valueSetters();
 menuAnimation();
 initHorizontalScroll();
@@ -885,41 +933,40 @@ contactAnimation();
 contactGlow();
 footerAnimation();
 
+// function menuLinkScroll() {
+//   // Shob menu link, jegular href="#" diye shuru
+//   const menuLinks = document.querySelectorAll('nav #nav-inner a[href^="#"]');
 
-function menuLinkScroll() {
-  // Shob menu link, jegular href="#" diye shuru
-  const menuLinks = document.querySelectorAll('nav a[href^="#"]');
+//   menuLinks.forEach((link) => {
+//     link.addEventListener("click", (e) => {
+//       e.preventDefault(); // native jump bondho koro
 
-  menuLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault(); // native jump bondho koro
+//       const targetId = link.getAttribute("href"); // jemon "#page5"
+//       const targetElement = document.querySelector(targetId);
 
-      const targetId = link.getAttribute("href"); // jemon "#page5"
-      const targetElement = document.querySelector(targetId);
+//       if (!targetElement) return; // target na thakle kichu koro na
 
-      if (!targetElement) return; // target na thakle kichu koro na
+//       // Menu khola thakle age bondho koro (tomar age-er gsapMenu function)
+//       gsapMenu(0, 0);
+//       if (window.lenis) {
+//         lenis.start(); // menu bondho howar sathe sathe scroll abar enable
+//       }
 
-      // Menu khola thakle age bondho koro (tomar age-er gsapMenu function)
-      gsapMenu(0, 0);
-      if (window.lenis) {
-        lenis.start(); // menu bondho howar sathe sathe scroll abar enable
-      }
-
-      // Lenis diye smooth scroll target section-e
-      if (window.lenis) {
-        lenis.scrollTo(targetElement, {
-          duration: 1.8,
-          easing: (t) => 1 - Math.pow(1 - t, 3), // ease-out cubic
-          offset: 0, // header fixed thakle ekhane negative value dite paro, jemon -80
-        });
-      } else {
-        // Fallback, Lenis kono karone load na hole
-        targetElement.scrollIntoView({ behavior: "smooth" });
-      }
-    });
-  });
-}
-menuLinkScroll();
+//       // Lenis diye smooth scroll target section-e
+//       if (window.lenis) {
+//         lenis.scrollTo(targetElement, {
+//           duration: 1.8,
+//           easing: (t) => 1 - Math.pow(1 - t, 3), // ease-out cubic
+//           offset: 0, // header fixed thakle ekhane negative value dite paro, jemon -80
+//         });
+//       } else {
+//         // Fallback, Lenis kono karone load na hole
+//         targetElement.scrollIntoView({ behavior: "smooth" });
+//       }
+//     });
+//   });
+// }
+// menuLinkScroll();
 
 // ---- Footer "Back to top" button — Lenis diye scroll ----
 document.getElementById("footer-back-top").addEventListener("click", () => {
