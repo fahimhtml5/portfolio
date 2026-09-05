@@ -200,23 +200,59 @@
             </div>
           </a>
 
-          <a href="https://versta-ibrz9vw7.myshopify.com/" target="_blank" class="scroll-card">
+          <a
+            href="https://versta-ibrz9vw7.myshopify.com/password"
+            target="_blank"
+            class="scroll-card"
+            onclick="
+              event.preventDefault();
+
+              const form = document.createElement('form');
+              form.method = 'POST';
+              form.action = 'https://versta-ibrz9vw7.myshopify.com/password';
+              form.target = '_blank';
+
+              const formType = document.createElement('input');
+              formType.type = 'hidden';
+              formType.name = 'form_type';
+              formType.value = 'storefront_password';
+
+              const utf8 = document.createElement('input');
+              utf8.type = 'hidden';
+              utf8.name = 'utf8';
+              utf8.value = '✓';
+
+              const password = document.createElement('input');
+              password.type = 'hidden';
+              password.name = 'password';
+              password.value = 'versta';
+
+              form.appendChild(formType);
+              form.appendChild(utf8);
+              form.appendChild(password);
+
+              document.body.appendChild(form);
+              form.submit();
+              form.remove();
+            "
+          >
             <div class="scroll-card-img">
               <img src="./assets/images/Versta.png" alt="" />
             </div>
+
             <div class="scroll-card-text pt-[2vw]">
               <div class="flex items-center justify-between">
                 <h3 class="uppercase font-semibold text-[2vw]">
-                  Versta 
-                  <span class="uppercase text-xs text-border-main">Pass: versta</span>
+                  Versta
                 </h3>
+
                 <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
-                    d="M14.4535 3.8428L1.59097 16.7053L1.50667e-05 15.1144L12.8626 2.25185L0.779174 2.25185L0.795491 4.13326e-05H16.7053V15.9099L14.4535 15.9262L14.4535 3.8428Z"
+                    d="M14.4535 3.8428L1.59097 16.7053L1.50667e-05 15.1144L12.8626 2.25185L0.779174 2.25185L0.795491 4.13326H16.7053V15.9099L14.4535 15.9262L14.4535 3.8428Z"
                     fill="#1B1C1C" />
                 </svg>
               </div>
-              </h3>
+
               <p>Shopify / Liquid / JavaScript / Responsive</p>
             </div>
           </a>
